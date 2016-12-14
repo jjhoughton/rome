@@ -213,6 +213,16 @@ function calendar (calendarOptions) {
       dom({ className: o.styles.timeOption, parent: timelist, text: next.format(o.timeFormat) });
       next.add(o.timeInterval, 'seconds');
     }
+
+    setTimeout(function() {
+      var p = container.parentElement.parentElement;
+      var min = p.querySelector(".js-time-minutes");
+      var hour = p.querySelector(".js-time-hours");
+      if (min && hour) {
+        crossvent.add(min, "change", setTimeFromEl);
+        crossvent.add(hour, "change", setTimeFromEl);
+      }
+    }, 0);
   }
 
   function weekday (index, backwards) {
@@ -632,6 +642,16 @@ function calendar (calendarOptions) {
   function setTime (to, from) {
     to.hour(from.hour()).minute(from.minute()).second(from.second());
     return to;
+  }
+
+  function setTimeFromEl (e) {
+    var target = e.target.parentElement;
+    var hours = +target.querySelector(".js-time-hours").value;
+    var minutes = +target.querySelector(".js-time-minutes").value;
+    ref.hour(hours);
+    ref.minute(minutes);
+    emitValues();
+    updateTime();
   }
 
   function pickTime (e) {
